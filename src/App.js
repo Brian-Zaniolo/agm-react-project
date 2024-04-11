@@ -1,12 +1,12 @@
 import "./App.css";
 import { useState } from "react";
-import {useSelector, useDispatch} from 'react-redux'
+import { useSelector, useDispatch } from "react-redux";
 import { addPost, deletePost, getAllPosts } from "./store/postsSlice";
 
 const App = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const posts = useSelector(getAllPosts)
+  const posts = useSelector(getAllPosts);
 
   const [inputValues, setInputValues] = useState({ title: "", content: "" });
 
@@ -14,19 +14,17 @@ const App = () => {
     setInputValues({
       ...inputValues,
       //computed object properties
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(addPost(inputValues.title, inputValues.content))
+    dispatch(addPost(inputValues.title, inputValues.content));
 
-    setInputValues({ title: "", content: "" })
+    setInputValues({ title: "", content: "" });
   };
-
-  
 
   return (
     <div className="div">
@@ -52,7 +50,7 @@ const App = () => {
               <h3> {p.title} </h3>
               <p> {p.content} </p>
               <p> {p.id} </p>
-              <button onClick={()=>dispatch(deletePost(p.id))}>Delete</button>
+              <button onClick={() => dispatch(deletePost(p.id))}>Delete</button>
             </div>
           ))}
       </div>
