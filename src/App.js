@@ -1,35 +1,32 @@
 import "./App.css";
-import { useEffect, useState } from "react";
-import { nanoid } from "@reduxjs/toolkit";
+import { useState } from "react";
+import {useSelector, useDispatch} from 'react-redux'
+import { addPost, deletePost, getAllPosts } from "./store/postsSlice";
 
 const App = () => {
+  const dispatch = useDispatch()
+
+  const posts = useSelector(getAllPosts)
+
   const [inputValues, setInputValues] = useState({ title: "", content: "" });
-  const [posts, setPosts] = useState(
-    localStorage.getItem("posts")
-      ? JSON.parse(localStorage.getItem("posts"))
-      : []
-  );
-  localStorage.setItem("posts", JSON.stringify(posts));
 
   const handleChange = (e) => {
     setInputValues({
       ...inputValues,
       //computed object properties
-      [e.target.name]: e.target.value,
-      id: nanoid(),
+      [e.target.name]: e.target.value
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setPosts([inputValues, ...posts]);
+
+    dispatch(addPost(inputValues.title, inputValues.content))
+
+    setInputValues({ title: "", content: "" })
   };
 
-  const handleDelete = (id) => {
-    setPosts(
-      posts.filter(p => p.id !== id)
-    )
-  }
+  
 
   return (
     <div className="div">
@@ -55,7 +52,7 @@ const App = () => {
               <h3> {p.title} </h3>
               <p> {p.content} </p>
               <p> {p.id} </p>
-              <button onClick={()=>handleDelete(p.id)}>Delete</button>
+              <button onClick={()=>dispatch(deletePost(p.id))}>Delete</button>
             </div>
           ))}
       </div>
