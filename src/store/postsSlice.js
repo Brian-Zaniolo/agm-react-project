@@ -1,10 +1,20 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const initialState = {
-  data: localStorage.getItem("posts")
-    ? JSON.parse(localStorage.getItem("posts"))
-    : [],
+export const initialState = {
+  data: [],
+  loading: true,
+  error: null,
 };
+
+export const fetchAllposts = createAsyncThunk(
+  "posts/fetchAllPosts",
+  async (limit) => {
+    const res = await axios.get(`https://dummyjson.com/posts?limit=${limit}`);
+    console.log(res.data);
+    return res.data;
+  }
+);
 
 const postsSlice = createSlice({
   name: "posts",
@@ -28,9 +38,23 @@ const postsSlice = createSlice({
       localStorage.setItem("posts", JSON.stringify(state.data));
     },
   },
+  extraReducers(builder) {
+    builder
+      .addCase(fetchAllposts.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllposts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchAllposts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
 });
 
-export const { addPost, deletePost } = postsSlice.actions;
+export const { addPost, deletePost, setLimit } = postsSlice.actions;
 
 export const getAllPosts = (s) => {
   console.log(s.posts.data);

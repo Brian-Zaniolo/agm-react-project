@@ -1,14 +1,23 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addPost, deletePost, getAllPosts } from "./store/postsSlice";
+import {
+  addPost,
+  deletePost,
+  getAllPosts,
+  fetchAllposts,
+} from "./store/postsSlice";
 
 const App = () => {
   const dispatch = useDispatch();
 
   const posts = useSelector(getAllPosts);
-
   const [inputValues, setInputValues] = useState({ title: "", content: "" });
+  const [limit, setLimit] = useState(10);
+
+  useEffect(() => {
+    dispatch(fetchAllposts(limit));
+  }, [limit]);
 
   const handleChange = (e) => {
     setInputValues({
@@ -26,6 +35,10 @@ const App = () => {
     setInputValues({ title: "", content: "" });
   };
 
+  const handleLimit = (e) => {
+    setLimit(e.target.value);
+  };
+
   return (
     <div className="div">
       <form onSubmit={handleSubmit}>
@@ -41,9 +54,22 @@ const App = () => {
           value={inputValues.content}
           onChange={handleChange}
         />
+        <select onChange={(e) => handleLimit(e)}>
+          <option value={10}> 10 </option>
+          <option value={20}> 20 </option>
+          <option value={30}> 30 </option>
+          <option value={40}> 40 </option>
+          <option value={50}> 50 </option>
+          <option value={60}> 60 </option>
+          <option value={70}> 70 </option>
+          <option value={80}> 80 </option>
+          <option value={90}> 90 </option>
+          <option value={100}> 100 </option>
+        </select>
         <button type="submit">Save post</button>
       </form>
-      <div>
+      <div>{posts.length}</div>
+      {/* <div>
         {posts.length > 0 &&
           posts.map((p) => (
             <div key={p.id}>
@@ -53,7 +79,7 @@ const App = () => {
               <button onClick={() => dispatch(deletePost(p.id))}>Delete</button>
             </div>
           ))}
-      </div>
+      </div> */}
     </div>
   );
 };
