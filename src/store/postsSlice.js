@@ -60,5 +60,6 @@ export const getAllPosts = (s) => {
   console.log(s.posts.data);
   return s.posts.data;
 };
+export const findPostById = (s, id) => s.posts.data.find((p) => p.id === id);
 
 export default postsSlice.reducer;

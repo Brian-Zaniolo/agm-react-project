@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Router, Route } from "react-router-dom";
 import {
   addPost,
   deletePost,
